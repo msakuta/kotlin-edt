@@ -1,6 +1,7 @@
 import java.io.File
 import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
+import kotlin.math.sqrt
 import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
@@ -30,15 +31,15 @@ fun main(args: Array<String>) {
         edtResult = edt(bArray, Pair(img.width, img.height))
     }
 
-    println("time: $time")
+    println("time: ${time}ms")
 
     val edtInt = edtResult.map { i -> i.toInt() }.toIntArray()
 
     val maxValue = edtInt.reduce { acc, i -> acc.coerceAtLeast(i) }
 
     val fHorzEdtPixel = edtInt.map {
-            i ->
-        val v = i * 127 / maxValue
+        i ->
+        val v = i * 255 / maxValue
         v or (v shl 8) or (v shl 16)
     }.toIntArray()
 
@@ -131,7 +132,7 @@ fun edt(buffer: List<Boolean>, shape: Pair<Int, Int>): Array<Double> {
 
     for (x in 0 until shape.first) {
         for (y in 0 until shape.second) {
-            ret[x+y*shape.first] = verticalScan(x, y)
+            ret[x+y*shape.first] = sqrt(verticalScan(x, y))
         }
     }
 
